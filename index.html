@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>今日一卦</title>
+    <meta
+      name="description"
+      content="基于《周易》原典，结合解卦资料整理的每日卦象与今日提升建议。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="ambient ambient-left"></div>
+      <div class="ambient ambient-right"></div>
+
+      <main class="layout">
+        <section class="hero-card panel">
+          <p class="eyebrow">TODAY'S HEXAGRAM</p>
+          <div class="hero-heading">
+            <div>
+              <h1>今日一卦</h1>
+              <p class="hero-copy">
+                给今天一个更清醒，也更温柔的开场。
+              </p>
+            </div>
+            <div class="date-badge">
+              <span id="todayDateLabel"></span>
+              <strong id="todayWeekLabel"></strong>
+            </div>
+          </div>
+
+        </section>
+
+        <section class="main-grid">
+          <section class="panel profile-panel" id="profilePanel">
+            <div class="panel-head">
+              <p class="eyebrow">PROFILE</p>
+              <h2>出生日期</h2>
+            </div>
+
+            <form id="profileForm" class="profile-form">
+              <label class="field">
+                <span>生日</span>
+                <input id="birthdateInput" name="birthdate" type="date" required />
+              </label>
+              <button class="primary-button" type="submit">保存资料</button>
+            </form>
+
+            <div id="profileSummary" class="profile-summary hidden" aria-live="polite"></div>
+          </section>
+
+          <section class="panel reveal-panel">
+            <div class="panel-head">
+              <p class="eyebrow">RITUAL</p>
+              <h2>开启今天的卦象</h2>
+            </div>
+            <div class="reveal-actions">
+              <button id="revealButton" class="primary-button" type="button">
+                开启今日卦象
+              </button>
+              <p id="revealHint" class="subtle-text">
+                保存生日后即可开启。当天多次打开，结果会保持一致。
+              </p>
+            </div>
+          </section>
+        </section>
+
+        <section id="resultSection" class="result-section hidden" aria-live="polite">
+          <article class="panel result-panel">
+            <div class="result-topline">
+              <p class="eyebrow">DAILY READING</p>
+              <span id="resultIdentity" class="identity-chip"></span>
+            </div>
+
+            <div class="result-hero">
+              <div>
+                <p class="result-label">今日卦象｜个人参考</p>
+                <h2 id="hexagramName"></h2>
+                <p id="hexagramTheme" class="theme-line"></p>
+              </div>
+              <div class="hexagram-badge">
+                <span>第</span>
+                <strong id="hexagramId"></strong>
+                <span>卦</span>
+              </div>
+            </div>
+
+            <div class="result-grid">
+              <section class="result-block result-block-accent result-block-wide result-block-summary">
+                <p class="result-label">总体判断</p>
+                <p id="overallSummary" class="result-text"></p>
+              </section>
+              <section class="result-block result-block-wide result-block-reading">
+                <p class="result-label">原典出处</p>
+                <p id="sourceText" class="result-source"></p>
+              </section>
+              <section class="result-block result-block-wide result-block-translation">
+                <p class="result-label">白话释义</p>
+                <p id="sourceInterpretation" class="result-text"></p>
+              </section>
+              <section class="result-block result-block-wide result-block-modern">
+                <p class="result-label">今日转译</p>
+                <p id="modernReading" class="result-text"></p>
+              </section>
+              <section class="result-block result-block-compact result-block-guidance">
+                <p class="result-label">今日宜做</p>
+                <p id="guidanceText" class="result-text"></p>
+              </section>
+              <section class="result-block result-block-compact result-block-caution">
+                <p class="result-label">今日少做</p>
+                <p id="cautionText" class="result-text"></p>
+              </section>
+            </div>
+          </article>
+
+          <aside class="result-side">
+            <article class="panel uplift-panel">
+              <p class="eyebrow">UPLIFT</p>
+              <h3>今日提升方式</h3>
+              <div class="color-row">
+                <span id="luckyColorSwatch" class="color-swatch"></span>
+                <div>
+                  <p class="result-label">幸运色</p>
+                  <strong id="luckyColorName"></strong>
+                </div>
+              </div>
+              <p id="actionSuggestion" class="result-text"></p>
+            </article>
+
+            <article class="panel source-panel">
+              <p class="eyebrow">SOURCE NOTE</p>
+              <p class="source-copy">
+                内容基于《周易》原典，结合常见解卦资料整理，仅作为日常启发与自我整理参考。
+              </p>
+              <button id="resetProfileButton" class="ghost-button" type="button">
+                清除本地资料
+              </button>
+            </article>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="./hexagram-content.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
