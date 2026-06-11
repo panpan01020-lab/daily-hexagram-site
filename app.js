@@ -56,6 +56,30 @@ const ACTION_SUGGESTIONS = [
   "在傍晚之前完成一次身体上的放松，比如散步或伸展。"
 ];
 
+const SUMMARY_OPENERS = [
+  (name, theme) => `今天你的卦象落在「${name}」：${theme}。它更像一种提醒，不是催你立刻得出结果，而是告诉你，这一天真正重要的，往往是在过程中稳住自己。`,
+  (name, theme) => `你今天对应的卦象是「${name}」：${theme}。比起急着证明什么，它更像在轻轻提醒你，先把自己的节奏放回合适的位置。`,
+  (name, theme) => `这一天给你的卦象是「${name}」：${theme}。`
+];
+
+const MODERN_TRANSITIONS = [
+  "放到你今天的状态里，它更像在说：",
+  "你会更明显地感受到：",
+  ""
+];
+
+const GUIDANCE_OPENERS = [
+  "今天更顺手的做法是：",
+  "",
+  "这卦更支持你这样去行动："
+];
+
+const CAUTION_OPENERS = [
+  "这一天更需要留意的是：",
+  "",
+  "今天别急着这样做："
+];
+
 const HEXAGRAM_NAMES = [
   "乾", "坤", "屯", "蒙", "需", "讼", "师", "比",
   "小畜", "履", "泰", "否", "同人", "大有", "谦", "豫",
@@ -313,17 +337,24 @@ function resolveDailyReading(profile, date) {
   const colorIndex = (dayIndex + signOffset + zodiacOffset) % hexagram.luckyColors.length;
   const actionIndex = (dayIndex + zodiacOffset) % hexagram.actionSuggestions.length;
   const luckyColor = hexagram.luckyColors[colorIndex];
+  const summaryTemplate = SUMMARY_OPENERS[dayIndex % SUMMARY_OPENERS.length];
+  const modernTransition = MODERN_TRANSITIONS[hexagram.hexagramId % MODERN_TRANSITIONS.length];
+  const guidanceOpener = GUIDANCE_OPENERS[hexagram.hexagramId % GUIDANCE_OPENERS.length];
+  const cautionOpener = CAUTION_OPENERS[hexagram.hexagramId % CAUTION_OPENERS.length];
+  const polishedSummary = stripLeadPhrase(hexagram.modernSummary, hexagram.hexagramName);
+  const polishedGuidance = stripLeadPhrase(hexagram.guidance, hexagram.hexagramName);
+  const polishedCaution = stripLeadPhrase(hexagram.caution, hexagram.hexagramName);
 
   return {
     hexagram,
     luckyColor,
     actionSuggestion: `${hexagram.actionSuggestions[actionIndex]} 幸运色建议使用 ${luckyColor.name}，让今天的注意力更集中。`,
-    overallSummary: `今天为你推算出的卦象落在「${hexagram.hexagramName}」：${hexagram.coreMeaning}。这个结果不是只按日期生成，而是结合你的生日、星座、属相以及今天的时间共同推算得出，所以它更适合作为你今天的个人参考。`,
+    overallSummary: summaryTemplate(hexagram.hexagramName, hexagram.coreMeaning),
     sourceText: hexagram.sourceText,
     sourceInterpretation: hexagram.sourceInterpretation,
-    modernReading: `${hexagram.modernSummary} 落到你的 ${profile.sign} 与 ${profile.chineseZodiac} 气质上，今天更适合把注意力收拢到最有回应感的一件事，再逐步扩展到其他安排。你不需要先理解“所有人今天是什么卦”，只需要先读懂这个卦象对你今天意味着什么。`,
-    guidanceText: `${hexagram.guidance} 若你能从 ${profile.zodiacTrait} 出发做选择，今天的推进会更顺手。`,
-    cautionText: `${hexagram.caution} 尤其当外部意见变多时，更要避免为了立刻被理解而打乱自己的次序。`,
+    modernReading: `${modernTransition}${polishedSummary}`,
+    guidanceText: `${guidanceOpener}${polishedGuidance}`,
+    cautionText: `${cautionOpener}${polishedCaution}`,
     dayStemBranch: getStemBranch(date)
   };
 }
@@ -355,4 +386,14 @@ function getPersonalDailyHexagramIndex(profile, dayIndex) {
   const zodiacOffset = profile.chineseZodiac.charCodeAt(0);
   const mixedValue = personalIndex * 5 + dayIndex * 7 + signOffset + zodiacOffset;
   return ((mixedValue % HEXAGRAM_DATA.length) + HEXAGRAM_DATA.length) % HEXAGRAM_DATA.length;
+}
+
+function stripLeadPhrase(text, hexagramName) {
+  return text
+    .replace(new RegExp(`^今天若落在${hexagramName}卦，?`), "")
+    .replace(new RegExp(`^${hexagramName}卦对应的是`), "它对应的是")
+    .replace(new RegExp(`^${hexagramName}不是`), "它不是")
+    .replace(/^适合/, "")
+    .replace(/^不要/, "")
+    .trim();
 }
